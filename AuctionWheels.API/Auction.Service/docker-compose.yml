@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   postgres:
     image: postgres
@@ -11,5 +9,15 @@ services:
       - POSTGRES_PASSWORD=varunpost
       - POSTGRES_USER=postgres
       - POSTGRES_DB=auction
+  mongo:
+    image: mongo
+    environment:
+        - MONGO_INITDB_ROOT_USERNAME = root
+        - MONGO_INITDB_ROOT_PASSWORD = mongopw  
+    ports:
+        - 27017:27017
+    volumes:
+        - mongodata:/data/db
 volumes:
   pgData:
+  mongodata:  
