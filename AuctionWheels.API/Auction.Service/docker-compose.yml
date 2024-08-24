@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - pgData:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=varunpost
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=auction
+volumes:
+  pgData:
