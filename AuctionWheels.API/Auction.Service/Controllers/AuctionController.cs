@@ -2,6 +2,8 @@
 using Auction.Service.DTOs;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Contracts;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,11 +15,13 @@ namespace Auction.Service.Controllers
     {
         private readonly IMapper _mapper;
         private readonly AuctionDbContext _dbContext;
+        private IPublishEndpoint _publishEndpoint;
 
-        public AuctionController(IMapper mapper, AuctionDbContext dbContext)
+        public AuctionController(IMapper mapper, AuctionDbContext dbContext, IPublishEndpoint publishEndpoint)
         {
             _mapper = mapper;
             _dbContext = dbContext;
+            _publishEndpoint = publishEndpoint;
         }
 
         [HttpGet]
@@ -58,6 +62,10 @@ namespace Auction.Service.Controllers
 
             await _dbContext.Auctions.AddAsync(auction);
 
+            var item = _mapper.Map<AuctionCreated>(auction);
+
+            await _publishEndpoint.Publish(_mapper.Map<AuctionCreated>(item));
+
             var result = await _dbContext.SaveChangesAsync() > 0;
 
             if (!result)
@@ -65,7 +73,7 @@ namespace Auction.Service.Controllers
                 return BadRequest("Error Occurred while adding Auction");
             }
 
-            return CreatedAtAction(nameof(GetAuctionById), new { auction.Id }, _mapper.Map<Models.Auction>(auction));
+            return CreatedAtAction(nameof(GetAuctionById), new { auction.Id }, item);
         }
 
         [HttpPut("{id}")]
@@ -83,6 +91,8 @@ namespace Auction.Service.Controllers
             auction.Item.Year = updateAuctionDto.Year;
             auction.Item.Mileage = updateAuctionDto.Mileage;
             auction.Item.Model = updateAuctionDto.Model ?? auction.Item.Model;
+
+            await _publishEndpoint.Publish(_mapper.Map<AuctionUpdated>(auction));
 
             var result = await _dbContext.SaveChangesAsync() > 0;
 
@@ -102,6 +112,8 @@ namespace Auction.Service.Controllers
             }
 
             _dbContext.Remove(auction);
+
+            await _publishEndpoint.Publish(new { Id = auction.Id.ToString() });
 
             var result = await _dbContext.SaveChangesAsync() > 0;
 
