@@ -20,4 +20,7 @@
 		<!--<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.3" />-->
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.3" />
 	</ItemGroup>
+	<!--<ItemGroup>
+		<None Include="Pages\Account\Register\Index.cshtml" />
+	</ItemGroup>-->
 </Project>

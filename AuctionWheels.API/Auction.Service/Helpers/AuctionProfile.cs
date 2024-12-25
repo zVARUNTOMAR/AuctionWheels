@@ -1,4 +1,5 @@
 ﻿using Auction.Service.DTOs;
+using Auction.Service.Models;
 using AutoMapper;
 using Contracts;
 
@@ -16,6 +17,7 @@ namespace Auction.Service.Helpers
             CreateMap<AuctionDto, AuctionCreated>();
             CreateMap<Models.Auction, AuctionCreated>();
             CreateMap<Models.Auction, AuctionUpdated>().IncludeMembers(x => x.Item);
+            CreateMap<Item, AuctionUpdated>();
         }
     }
 }
