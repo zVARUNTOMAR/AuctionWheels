@@ -64,7 +64,7 @@ namespace Auction.Service.Controllers
 
             await _dbContext.Auctions.AddAsync(auction);
 
-            var item = _mapper.Map<AuctionCreated>(auction);
+            var item = _mapper.Map<AuctionDto>(auction);
 
             await _publishEndpoint.Publish(_mapper.Map<AuctionCreated>(item));
 
