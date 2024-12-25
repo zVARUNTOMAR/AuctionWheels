@@ -27,8 +27,21 @@ namespace Service.Identity
                     ClientName = "Postman",
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     ClientSecrets = { new Secret("secret".Sha256()) },
-                    AllowedScopes = { "openid","profile", "auctionWheels"},
+                    AllowedScopes = { "openid", "profile", "auctionWheels"},
                     RedirectUris = {"https://www.getpost.com/what"}
+                },
+
+                new Client
+                {
+                    ClientId = "nextApp",
+                    ClientName = "nextApp",
+                    ClientSecrets = { new Secret("secret".Sha256())},
+                    AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
+                    RequirePkce = false,
+                    RedirectUris = { "https://localhost:3000/api/auth/callback/id-server" },
+                    AllowOfflineAccess = true,
+                    AllowedScopes = { "openid", "profile", "auctionApp" },
+                    AccessTokenLifetime = 3600*24*30
                 }
             };
     }
