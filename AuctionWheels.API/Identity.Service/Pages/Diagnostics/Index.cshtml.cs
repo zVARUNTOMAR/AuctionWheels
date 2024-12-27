@@ -16,16 +16,16 @@ namespace Service.Identity.Pages.Diagnostics
 
         public async Task<IActionResult> OnGet()
         {
-            var localAddresses = new List<string?> { "127.0.0.1", "::1" };
-            if (HttpContext.Connection.LocalIpAddress != null)
-            {
-                localAddresses.Add(HttpContext.Connection.LocalIpAddress.ToString());
-            }
+            var localAddresses = new List<string?> { "127.0.0.1", "::1", "192.168.1.2" };
+            //if (HttpContext.Connection.LocalIpAddress != null)
+            //{
+            //    localAddresses.Add(HttpContext.Connection.LocalIpAddress.ToString());
+            //}
 
-            if (!localAddresses.Contains(HttpContext.Connection.RemoteIpAddress?.ToString()))
-            {
-                return NotFound();
-            }
+            //if (!localAddresses.Contains(HttpContext.Connection.RemoteIpAddress?.ToString()))
+            //{
+            //    return NotFound();
+            //}
 
             View = new ViewModel(await HttpContext.AuthenticateAsync());
 

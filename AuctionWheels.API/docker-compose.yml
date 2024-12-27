@@ -1,0 +1,83 @@
+services:
+  postgres:
+    image: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - pgData:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=varunpost
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=auction
+  mongo:
+    image: mongo
+    environment:
+        - MONGO_INITDB_ROOT_USERNAME = root
+        - MONGO_INITDB_ROOT_PASSWORD = mongopw  
+    ports:
+        - 27017:27017
+    volumes:
+        - mongodata:/data/db
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+    - 5672:5672
+    - 15672:15672
+  auction-svc:
+    image: varuntomar/auctions-svc:latest
+    build:
+        context: .
+        dockerfile: Auction.Service/Dockerfile
+    environment:
+     - ASPNETCORE_ENVIRONMENT=Development
+     - ASPNETCORE_URLS=http://+:80
+     - RabbitMq__Host=rabbitmq
+     - ConnectionStrings__DefaultConnection=Server=postgres;User Id=postgres;Password=varunpost;Database=Auction 
+     - IdentityServiceUrl = http://identity-svc
+    ports:
+      - 7001:80
+    depends_on:
+      - postgres
+      - rabbitmq
+  search-svc:
+    image: varuntomar/search-svc:latest
+    build:
+        context: .
+        dockerfile: Search.Service/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - RabbitMq__Host=rabbitmq
+      - ConnectionStrings__MongoDbConnectionString = mongodb://localhost:27017/
+      - AuctionServiceUrl = http://auction-svc
+    ports:
+      - 7002:80
+    depends_on:
+      - mongo
+      - rabbitmq
+  identity-svc:
+    image: varuntomar/identity-svc:latest
+    build:
+        context: .
+        dockerfile: Identity.Service/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=postgres;User Id=postgres;Password=varunpost;Database=Identity
+    ports:
+      - 5000:80
+    depends_on:
+      - postgres
+  gateway-svc:
+    image: varuntomar/gateway-svc:latest
+    build:
+        context: .
+        dockerfile: Gateway.Service/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - 6001:80
+volumes:
+  pgData:
+  mongodata:  
