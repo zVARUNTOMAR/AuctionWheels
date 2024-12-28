@@ -5,23 +5,26 @@ import AuctionCard from "./AuctionCard";
 import AppPagination from "../components/AppPagination";
 import { Auction } from "../types";
 import { getData } from "../actions/auctionActions";
+import Filters from "./Filters";
 
 export default function Listings() {
   const [auctions, setAuctions] = useState<Auction[]>([]);
   const [pageCount, setPageCount] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize, setPageSize] = useState(4);
 
   useEffect(() => {
-    getData(pageNumber).then((data) => {
+    getData(pageNumber, pageSize).then((data) => {
       setAuctions(data.results);
       setPageCount(data.pageCount);
     });
-  }, [pageNumber]);
+  }, [pageNumber, pageSize]);
 
   if (auctions.length === 0) return <h2>Loading...</h2>;
 
   return (
     <>
+      <Filters pageSize={pageSize} setPageSize={setPageSize}></Filters>
       <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {auctions &&
           auctions.map((auction) => (
