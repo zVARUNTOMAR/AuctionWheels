@@ -9,11 +9,12 @@ services:
       - POSTGRES_PASSWORD=varunpost
       - POSTGRES_USER=postgres
       - POSTGRES_DB=auction
-  mongo:
+  mongodb:
     image: mongo
     environment:
         - MONGO_INITDB_ROOT_USERNAME = root
         - MONGO_INITDB_ROOT_PASSWORD = mongopw  
+        - MONGO_INITDB_DATABASE = SearchDb
     ports:
         - 27017:27017
     volumes:
@@ -41,19 +42,23 @@ services:
       - rabbitmq
   search-svc:
     image: varuntomar/search-svc:latest
+    stdin_open: true
+    tty: true
+    links:
+      - "mongodb:mymongo"
     build:
         context: .
         dockerfile: Search.Service/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=http://+:80
       - RabbitMq__Host=rabbitmq
-      - ConnectionStrings__MongoDbConnectionString = mongodb://localhost:27017/
+      - ConnectionStrings__MongoDbConnectionString = mongodb://mymongo:27017/SearchDb
       - AuctionServiceUrl = http://auction-svc
     ports:
       - 7002:80
     depends_on:
-      - mongo
+      - mongodb
       - rabbitmq
   identity-svc:
     image: varuntomar/identity-svc:latest
@@ -61,7 +66,7 @@ services:
         context: .
         dockerfile: Identity.Service/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__DefaultConnection=Server=postgres;User Id=postgres;Password=varunpost;Database=Identity
     ports:

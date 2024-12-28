@@ -1,7 +1,11 @@
+import Listings from "./auctions/Listings";
+
 export default function Home() {
   return (
     <div>
-      <h3 className="text-3xl font-semibold">Auction Wheels</h3>
+      <h3 className="text-xl font-semibold">
+        <Listings></Listings>
+      </h3>
     </div>
   );
 }

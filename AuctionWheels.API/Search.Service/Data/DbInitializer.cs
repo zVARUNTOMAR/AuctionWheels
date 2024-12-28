@@ -9,6 +9,11 @@ namespace Search.Service.Data
     {
         public static async Task InitDb(WebApplication app)
         {
+            foreach (var config in app.Configuration.AsEnumerable())
+            {
+                Console.WriteLine($"{config.Key} : {config.Value}");
+            }
+
             await DB.InitAsync("SearchDb", MongoClientSettings.FromConnectionString(app.Configuration.GetConnectionString("MongoDbConnectionString")));
 
             await DB.Index<Item>()

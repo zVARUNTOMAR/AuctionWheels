@@ -29,6 +29,13 @@ namespace Service.Identity
                     options.Events.RaiseSuccessEvents = true;
                     // see https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/
                     //options.EmitStaticAudienceClaim = true;
+
+                    Console.WriteLine(builder.Environment.IsEnvironment("Docker"));
+
+                    if (builder.Environment.IsEnvironment("Docker"))
+                    {
+                        options.IssuerUri = "http://identity-svc";
+                    }
                 })
                 .AddInMemoryIdentityResources(Config.IdentityResources)
                 .AddInMemoryApiScopes(Config.ApiScopes)

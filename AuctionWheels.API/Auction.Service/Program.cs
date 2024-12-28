@@ -45,12 +45,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.Authority = builder.Configuration["IdentityServiceUrl"];
-        options.RequireHttpsMetadata = false; // Avoid this in production if HTTPS is used
-        options.TokenValidationParameters = new TokenValidationParameters
+        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters.ValidateAudience = false;
+        options.TokenValidationParameters.NameClaimType = "username";
+        options.TokenValidationParameters.ValidIssuer = "http://identity-svc";
+        options.TokenValidationParameters.ValidateIssuerSigningKey = false;
+        options.TokenValidationParameters.SignatureValidator = delegate (string token, TokenValidationParameters parameters)
         {
-            ValidateAudience = false, // Disable if you don't want to validate the audience
-            NameClaimType = "username",
-            ValidateIssuer = false
+            var jwt = new Microsoft.IdentityModel.JsonWebTokens.JsonWebToken(token);
+
+            return jwt;
         };
     });
 var app = builder.Build();
