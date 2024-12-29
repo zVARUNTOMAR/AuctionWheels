@@ -4,7 +4,6 @@ import { auth } from "@/auth";
 import { Auction, PagedResult } from "../types";
 
 export async function getData(query: string): Promise<PagedResult<Auction>> {
-  console.log(`http://localhost:6001/search${query}`);
   const res = await fetch(`http://localhost:6001/search${query}`);
 
   if (!res.ok) {
@@ -19,10 +18,7 @@ export async function updateAuctionTest() {
     mileage: Math.floor(Math.random() * 100000) + 1,
   };
 
-  // const token = await getTokenWorkaround();
   const session = await auth();
-
-  console.log(session.accessToken);
 
   const res = await fetch(
     "http://localhost:6001/auctions/b685511e-d72f-4ab0-8dd5-a119dd13a36c",

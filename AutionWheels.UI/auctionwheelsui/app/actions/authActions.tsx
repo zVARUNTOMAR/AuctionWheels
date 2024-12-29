@@ -19,15 +19,15 @@ export async function getCurrentUser() {
   }
 }
 
-
 export async function getTokenWorkaround() {
   const req = {
-      headers: Object.fromEntries(headers() as Headers),
-      cookies: Object.fromEntries(
-          cookies()
-              .getAll()
-              .map(c => [c.name, c.value])
-      )
+    headers: Object.fromEntries(headers() as Headers),
+    cookies: Object.fromEntries(
+      cookies()
+        .getAll()
+        .map((c) => [c.name, c.value])
+    ),
   } as NextApiRequest;
 
-  return await getToken({req});
+  return await getToken({ req });
+}
