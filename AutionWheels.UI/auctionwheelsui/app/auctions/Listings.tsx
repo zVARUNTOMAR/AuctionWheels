@@ -9,7 +9,7 @@ import Filters from "./Filters";
 import { useParamsStore } from "../hooks/useParamStore";
 import { useShallow } from "zustand/shallow";
 import qs from "query-string";
-import { fileURLToPath } from "url";
+import EmptyFilter from "../components/EmptyFilter";
 
 export default function Listings() {
   // const [auctions, setAuctions] = useState<Auction[]>([]);
@@ -45,19 +45,25 @@ export default function Listings() {
   return (
     <>
       <Filters></Filters>
-      <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {data &&
-          data.results.map((auction) => (
-            <AuctionCard auction={auction} key={auction.id}></AuctionCard>
-          ))}
-      </div>
-      <div className="flex justify-center mt-4">
-        <AppPagination
-          currentPage={params.pageNumber}
-          pageCount={data.pageCount}
-          pageChanged={setPageNumber}
-        ></AppPagination>
-      </div>
+      {data.totalCount === 0 ? (
+        <EmptyFilter showReset></EmptyFilter>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {data &&
+              data.results.map((auction) => (
+                <AuctionCard auction={auction} key={auction.id}></AuctionCard>
+              ))}
+          </div>
+          <div className="flex justify-center mt-4">
+            <AppPagination
+              currentPage={params.pageNumber}
+              pageCount={data.pageCount}
+              pageChanged={setPageNumber}
+            ></AppPagination>
+          </div>
+        </>
+      )}
     </>
   );
 }
