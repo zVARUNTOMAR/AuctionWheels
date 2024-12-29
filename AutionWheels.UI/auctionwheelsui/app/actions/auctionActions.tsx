@@ -2,7 +2,6 @@
 
 import { auth } from "@/auth";
 import { Auction, PagedResult } from "../types";
-import { getTokenWorkaround } from "./authActions";
 
 export async function getData(query: string): Promise<PagedResult<Auction>> {
   console.log(`http://localhost:6001/search${query}`);

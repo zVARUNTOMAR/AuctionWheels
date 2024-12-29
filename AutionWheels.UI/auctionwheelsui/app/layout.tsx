@@ -1,6 +1,21 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "./nav/Navbar";
+import { Funnel_Sans, Roboto_Mono } from "next/font/google";
+
+const openSans = Funnel_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  //👇 Add variable to our object
+  variable: "--font-opensans",
+});
+
+//👇 Configure the object for our second font
+// const robotoMono = Roboto_Mono({
+//   subsets: ["latin"],
+//   display: "swap",
+//   variable: "--font-roboto-mono",
+// });
 
 export const metadata: Metadata = {
   title: "Auction Wheets",
@@ -13,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${openSans.variable} font-sans`}>
       <body>
         <Navbar></Navbar>
         <main className="container mx-auto px-5 pt-10">{children}</main>
