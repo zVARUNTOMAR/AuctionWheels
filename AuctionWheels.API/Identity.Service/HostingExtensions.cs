@@ -34,7 +34,7 @@ namespace Service.Identity
 
                     if (builder.Environment.IsEnvironment("Docker"))
                     {
-                        options.IssuerUri = "http://identity-svc";
+                        options.IssuerUri = "http://localhost:5000";
                     }
                 })
                 .AddInMemoryIdentityResources(Config.IdentityResources)
