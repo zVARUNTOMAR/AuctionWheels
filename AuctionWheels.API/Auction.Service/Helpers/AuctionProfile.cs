@@ -18,6 +18,7 @@ namespace Auction.Service.Helpers
             CreateMap<Models.Auction, AuctionCreated>();
             CreateMap<Models.Auction, AuctionUpdated>().IncludeMembers(x => x.Item);
             CreateMap<Item, AuctionUpdated>();
+            CreateMap<AuctionUpdated, Item>();
         }
     }
 }
