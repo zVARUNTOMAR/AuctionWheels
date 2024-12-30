@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Entities;
 
-namespace Bidding.Service.Controller
+namespace Bidding.Service.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
