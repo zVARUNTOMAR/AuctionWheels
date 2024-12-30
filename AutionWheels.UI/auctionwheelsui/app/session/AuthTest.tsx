@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Button } from "flowbite-react";
 import { updateAuctionTest } from "../actions/auctionActions";
+import toast from "react-hot-toast";
 
 export default function AuthTest() {
   const [loading, setLoading] = useState(false);

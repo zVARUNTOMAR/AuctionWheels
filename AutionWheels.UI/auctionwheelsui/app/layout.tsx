@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "./nav/Navbar";
-import { Funnel_Sans, Roboto_Mono } from "next/font/google";
+import { Funnel_Sans } from "next/font/google";
+import { ToastContainer } from "react-toastify";
 
 const openSans = Funnel_Sans({
   subsets: ["latin"],
@@ -30,6 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${openSans.variable} font-sans`}>
       <body>
+        <ToastContainer />
         <Navbar></Navbar>
         <main className="container mx-auto px-5 pt-10">{children}</main>
       </body>

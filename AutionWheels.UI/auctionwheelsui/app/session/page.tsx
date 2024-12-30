@@ -5,7 +5,6 @@ import AuthTest from "./AuthTest";
 
 const Session = async () => {
   const session = await auth();
-  console.log(session);
   return (
     <div>
       <Heading

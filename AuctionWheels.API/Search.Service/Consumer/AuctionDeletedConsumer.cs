@@ -6,7 +6,7 @@ using Search.Service.Models;
 
 namespace Search.Service.Consumer
 {
-    public class AuctionDeletedConsumer : IConsumer
+    public class AuctionDeletedConsumer : IConsumer<AuctionDeleted>
     {
         private readonly IMapper _mapper;
 
@@ -15,15 +15,15 @@ namespace Search.Service.Consumer
             _mapper = mapper;
         }
 
-        public async Task Consume(ConsumeContext<AuctionCreated> context)
+        public async Task Consume(ConsumeContext<AuctionDeleted> context)
         {
-            Console.WriteLine("==> Consuming auction created : " + context.Message.Id);
+            Console.WriteLine("==> Consuming auction deleted : " + context.Message.Id);
 
             var result = await DB.DeleteAsync<Item>(context.Message.Id);
 
             if (!result.IsAcknowledged)
             {
-                throw new MessageException(typeof(AuctionUpdated), "Problem updating mongodb");
+                throw new MessageException(typeof(AuctionDeleted), "Problem updating mongodb");
             }
         }
     }

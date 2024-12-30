@@ -111,7 +111,7 @@ namespace Auction.Service.Controllers
 
         [Authorize]
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteAction(Guid id)
+        public async Task<ActionResult> DeleteAuction(Guid id)
         {
             var auction = await _dbContext.Auctions.FindAsync(id);
 
@@ -125,9 +125,9 @@ namespace Auction.Service.Controllers
                 return Forbid();
             }
 
-            _dbContext.Remove(auction);
+            _dbContext.Auctions.Remove(auction);
 
-            await _publishEndpoint.Publish(new { Id = auction.Id.ToString() });
+            await _publishEndpoint.Publish<AuctionDeleted>(new { Id = auction.Id.ToString() });
 
             var result = await _dbContext.SaveChangesAsync() > 0;
 
