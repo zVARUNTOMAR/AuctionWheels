@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { auth } from "@/auth";
 
-const baseUrl = "http:localhost:6001/";
+const baseUrl = "http://localhost:6001/";
 
 async function handleResponse(response: Response) {
   const text = await response.text();
@@ -24,6 +24,8 @@ async function get(url: string) {
     method: "GET",
     headers: await getHeaders(),
   };
+
+  console.log(baseUrl + url);
 
   const response = await fetch(baseUrl + url, requestOptions);
 
