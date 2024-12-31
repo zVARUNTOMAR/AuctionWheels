@@ -11,19 +11,17 @@ COPY Search.Service/Search.Service.csproj Search.Service/Search.Service.csproj
 COPY Gateway.Service/Gateway.Service.csproj Gateway.Service/Gateway.Service.csproj
 COPY Bidding.Service/Bidding.Service.csproj Bidding.Service/Bidding.Service.csproj
 COPY Identity.Service/Identity.Service.csproj Identity.Service/Identity.Service.csproj
-COPY Bidding.Service/Bidding.Service.csproj Bidding.Service/Bidding.Service.csproj
 COPY Notification.Service/Notification.Service.csproj Notification.Service/Notification.Service.csproj
-
 COPY Contracts/Contracts.csproj Contracts/Contracts.csproj
 
 RUN dotnet restore AuctionWheels.API.sln
 
 # Copy everything else and build
 
-COPY Bidding.Service Bidding.Service
+COPY Notification.Service Notification.Service
 COPY Contracts Contracts
 
-WORKDIR /app/Bidding.Service
+WORKDIR /app/Notification.Service
 
 RUN dotnet publish -c Release -o /app/out
 
@@ -32,6 +30,6 @@ RUN dotnet publish -c Release -o /app/out
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/out .
-ENTRYPOINT ["dotnet", "Bidding.Service.dll"]
+ENTRYPOINT ["dotnet", "Notification.Service.dll"]
 
 

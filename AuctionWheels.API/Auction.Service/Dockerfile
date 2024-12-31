@@ -12,6 +12,7 @@ COPY Gateway.Service/Gateway.Service.csproj Gateway.Service/Gateway.Service.cspr
 COPY Bidding.Service/Bidding.Service.csproj Bidding.Service/Bidding.Service.csproj
 COPY Identity.Service/Identity.Service.csproj Identity.Service/Identity.Service.csproj
 COPY Contracts/Contracts.csproj Contracts/Contracts.csproj
+COPY Notification.Service/Notification.Service.csproj Notification.Service/Notification.Service.csproj
 
 RUN dotnet restore AuctionWheels.API.sln
 
