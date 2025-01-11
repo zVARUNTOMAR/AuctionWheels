@@ -2,6 +2,8 @@
 
 import React from "react";
 import Countdown, { zeroPad } from "react-countdown";
+import { useBidStore } from "../hooks/useBidStore";
+import { usePathname } from "next/navigation";
 
 const renderer = ({ days, hours, minutes, seconds, completed }: any) => {
   return (
@@ -26,9 +28,22 @@ const renderer = ({ days, hours, minutes, seconds, completed }: any) => {
 };
 
 const CountdownTimer = ({ auctionEnd }: Props) => {
+  const setOpen = useBidStore((state) => state.setOpen);
+  const pathName = usePathname();
+
+  function auctionFinished() {
+    if (pathName.startsWith("/auctions/details")) {
+      setOpen(false);
+    }
+  }
+
   return (
     <div>
-      <Countdown date={auctionEnd} renderer={renderer}></Countdown>
+      <Countdown
+        date={auctionEnd}
+        renderer={renderer}
+        onComplete={auctionFinished}
+      ></Countdown>
     </div>
   );
 };
