@@ -11,7 +11,6 @@ COPY Search.Service/Search.Service.csproj Search.Service/Search.Service.csproj
 COPY Gateway.Service/Gateway.Service.csproj Gateway.Service/Gateway.Service.csproj
 COPY Bidding.Service/Bidding.Service.csproj Bidding.Service/Bidding.Service.csproj
 COPY Identity.Service/Identity.Service.csproj Identity.Service/Identity.Service.csproj
-COPY Bidding.Service/Bidding.Service.csproj Bidding.Service/Bidding.Service.csproj
 COPY Notification.Service/Notification.Service.csproj Notification.Service/Notification.Service.csproj
 
 COPY Contracts/Contracts.csproj Contracts/Contracts.csproj

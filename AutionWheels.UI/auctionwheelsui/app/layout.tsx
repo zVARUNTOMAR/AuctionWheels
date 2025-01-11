@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "./nav/Navbar";
 import { Funnel_Sans } from "next/font/google";
 import { ToastContainer } from "react-toastify";
+import SignalRProvider from "./providers/SignalRProvider";
 
 const openSans = Funnel_Sans({
   subsets: ["latin"],
@@ -33,7 +34,9 @@ export default function RootLayout({
       <body>
         <ToastContainer />
         <Navbar></Navbar>
-        <main className="container mx-auto px-5 pt-10">{children}</main>
+        <main className="container mx-auto px-5 pt-10">
+          <SignalRProvider>{children}</SignalRProvider>
+        </main>
       </body>
     </html>
   );

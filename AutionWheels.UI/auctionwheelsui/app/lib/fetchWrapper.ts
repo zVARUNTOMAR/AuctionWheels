@@ -6,7 +6,13 @@ const baseUrl = "http://localhost:6001/";
 async function handleResponse(response: Response) {
   const text = await response.text();
 
-  const data = text && JSON.parse(text);
+  // const data = text && JSON.parse(text);
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch (error) {
+    data = text;
+  }
 
   if (response.ok) {
     return data || response.statusText;
@@ -28,7 +34,6 @@ async function get(url: string) {
   console.log(baseUrl + url);
 
   const response = await fetch(baseUrl + url, requestOptions);
-
   return await handleResponse(response);
 }
 

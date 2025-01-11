@@ -18,7 +18,7 @@ namespace Notification.Service.Consumers
         {
             Console.WriteLine("Consume -> auction created message reciever");
 
-            await _hubContext.Clients.All.SendAsync("Auction Created", context.Message);
+            await _hubContext.Clients.All.SendAsync("AuctionCreated", context.Message);
         }
     }
 }
