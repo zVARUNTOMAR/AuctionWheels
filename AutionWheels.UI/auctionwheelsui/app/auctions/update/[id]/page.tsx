@@ -3,8 +3,11 @@ import React from "react";
 import AuctionForm from "../../AuctionForm";
 import { getDetailedViewData } from "@/app/actions/auctionActions";
 
-const Update = async ({ params }: { params: { id: string } }) => {
-  const data = await getDetailedViewData(params.id);
+const Update = async ({ params }: { params: Promise<{ id: string }> }) => {
+  // Await the `params` Promise to retrieve the `id`
+  const resolvedParams = await params;
+  const data = await getDetailedViewData(resolvedParams.id);
+
   return (
     <div className="mx-auto max-w-[75%] shadow-lg p-10 bg-white rounded-lg">
       <Heading

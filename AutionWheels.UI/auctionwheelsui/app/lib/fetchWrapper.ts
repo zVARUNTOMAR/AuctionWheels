@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { auth } from "@/auth";
 
-const baseUrl = "http://localhost:6001/";
+const baseUrl = process.env.API_URL;
 
 async function handleResponse(response: Response) {
   const text = await response.text();
@@ -10,7 +9,7 @@ async function handleResponse(response: Response) {
   let data;
   try {
     data = JSON.parse(text);
-  } catch (error) {
+  } catch {
     data = text;
   }
 
@@ -37,7 +36,7 @@ async function get(url: string) {
   return await handleResponse(response);
 }
 
-async function post(url: string, body: {}) {
+async function post(url: string, body: any) {
   const requestOptions = {
     method: "POST",
     headers: await getHeaders(),
@@ -49,7 +48,7 @@ async function post(url: string, body: {}) {
   return await handleResponse(response);
 }
 
-async function put(url: string, body: {}) {
+async function put(url: string, body: any) {
   const requestOptions = {
     method: "PUT",
     headers: await getHeaders(),
@@ -72,12 +71,13 @@ async function del(url: string) {
 
 async function getHeaders() {
   const session = await auth();
+  const sessionObj = session as any;
   const headers = {
     "Content-type": "application/json",
   } as any;
 
-  if (session?.accessToken) {
-    headers.Authorization = "Bearer " + session.accessToken;
+  if (sessionObj != null && sessionObj.accessToken) {
+    headers.Authorization = "Bearer " + sessionObj.accessToken;
   }
 
   return headers;

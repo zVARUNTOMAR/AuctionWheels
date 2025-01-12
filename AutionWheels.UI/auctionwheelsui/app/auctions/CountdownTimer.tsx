@@ -5,6 +5,10 @@ import Countdown, { zeroPad } from "react-countdown";
 import { useBidStore } from "../hooks/useBidStore";
 import { usePathname } from "next/navigation";
 
+type Props = {
+  auctionEnd: string;
+};
+
 const renderer = ({ days, hours, minutes, seconds, completed }: any) => {
   return (
     <div

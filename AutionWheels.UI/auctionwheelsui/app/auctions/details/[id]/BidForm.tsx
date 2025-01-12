@@ -17,7 +17,7 @@ export default function BidForm({ auctionId, highBid }: Props) {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: {},
   } = useForm();
   const addBid = useBidStore((state) => state.addBid);
 

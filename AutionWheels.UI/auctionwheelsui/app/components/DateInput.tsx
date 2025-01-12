@@ -1,13 +1,13 @@
 import React from "react";
 import { UseControllerProps, useController } from "react-hook-form";
-import DatePicker, { ReactDatePickerProps } from "react-datepicker";
+import DatePicker from "react-datepicker";
 
 type Props = {
   label: string;
   type?: string;
   showLabel?: boolean;
-} & UseControllerProps &
-  DatePicker;
+  dateFormat?: any;
+} & UseControllerProps;
 
 export default function DateInput(props: Props) {
   const { fieldState, field } = useController({ ...props, defaultValue: "" });
@@ -17,9 +17,11 @@ export default function DateInput(props: Props) {
       <DatePicker
         {...props}
         {...field}
+        dateFormat={props.dateFormat}
         onChange={(value) => field.onChange(value)}
         selected={field.value}
         placeholderText={props.label}
+        showTimeSelect
         className={`
                         rounded-lg w-[100%] flex flex-col
                         ${

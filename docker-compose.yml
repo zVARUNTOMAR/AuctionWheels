@@ -18,16 +18,18 @@ services:
         - 27017:27017
     volumes:
         - mongodata:/data/db
+
   rabbitmq:
     image: rabbitmq:3-management-alpine
     ports:
     - 5672:5672
     - 15672:15672
+
   auction-svc:
     image: varuntomar/auctions-svc:latest
     build:
         context: .
-        dockerfile: Auction.Service/Dockerfile
+        dockerfile: AuctionWheels.API/Auction.Service/Dockerfile
     environment:
      - ASPNETCORE_ENVIRONMENT=Development
      - ASPNETCORE_URLS=http://+:80
@@ -43,6 +45,7 @@ services:
     depends_on:
       - postgres
       - rabbitmq
+
   search-svc:
     image: varuntomar/search-svc:latest
     stdin_open: true
@@ -51,7 +54,7 @@ services:
       - "mongodb:mymongo"
     build:
         context: .
-        dockerfile: Search.Service/Dockerfile
+        dockerfile: AuctionWheels.API/Search.Service/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=http://+:80
@@ -63,29 +66,32 @@ services:
     depends_on:
       - mongodb
       - rabbitmq
+
   identity-svc:
     image: varuntomar/identity-svc:latest
     build:
         context: .
-        dockerfile: Identity.Service/Dockerfile
+        dockerfile: AuctionWheels.API/Identity.Service/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__DefaultConnection=Server=postgres;User Id=postgres;Password=varunpost;Database=Identity
-    ports:
-      - 5000:80
+      - IssuerUri=https://id.auctionwheels.local
+      - ClientApp=https://app.auctionwheels.local
+      - VIRTUAL_HOST=id.auctionwheels.local
     depends_on:
       - postgres
   gateway-svc:
     image: varuntomar/gateway-svc:latest
     build:
         context: .
-        dockerfile: Gateway.Service/Dockerfile
+        dockerfile: AuctionWheels.API/Gateway.Service/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=http://+:80
-    ports:
-      - 6001:80
+      - VIRTUAL_HOST=api.auctionwheels.local
+      - ClientApp=https://app.auctionwheels.local
+
   bids-svc:
     image: varuntomar/bids-svc:latest
     stdin_open: true
@@ -94,7 +100,7 @@ services:
       - "mongodb:mymongo"
     build:
         context: .
-        dockerfile: Bidding.Service/Dockerfile
+        dockerfile: AuctionWheels.API/Bidding.Service/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
@@ -108,6 +114,7 @@ services:
     depends_on:
       - mongodb
       - rabbitmq
+
   notifications-svc:
     image: varuntomar/notifications-svc:latest
     stdin_open: true
@@ -116,7 +123,7 @@ services:
       - "mongodb:mymongo"
     build:
         context: .
-        dockerfile: Notification.Service/Dockerfile
+        dockerfile: AuctionWheels.API/Notification.Service/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
@@ -125,6 +132,36 @@ services:
       - 7004:80
     depends_on:
       - rabbitmq
+   
+  web-app:
+    image: varuntomar/web-app
+    build:
+      context: .
+      dockerfile: AutionWheels.UI/auctionwheelsui/Dockerfile
+    volumes:
+      - /var/lib/web/data
+    environment:
+      - AUTH_SECRET="KuJDjbgKADkuiTshIepFNracHLile8Tp9sBsDGibxKI="
+      - API_URL=http://gateway-svc/
+      - AUTH_URL_INTERNAL=http://web-app:3000
+      - ID_URL=https://id.auctionwheels.local
+      - AUTH_URL=https://app.auctionwheels.local
+      - NOTIFY_URL=https://api.auctionwheels.local/notifications
+      - AUTH_TRUST_HOST=true
+      - ID_URL_INTERNAL=http://identity-svc
+      - VIRTUAL_HOST=app.auctionwheels.local
+      - VIRTUAL_PORT=3000
+
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs
+
 volumes:
   pgData:
-  mongodata:  
+  mongodata:

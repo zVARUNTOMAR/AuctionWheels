@@ -19,12 +19,11 @@ const AuctionForm = ({ auction }: Props) => {
   const router = useRouter();
   const pathName = usePathname();
   const {
-    register,
     handleSubmit,
     setFocus,
     control,
     reset,
-    formState: { isSubmitting, isValid, isDirty, errors },
+    formState: { isSubmitting, isValid },
   } = useForm({ mode: "onTouched" });
 
   console.log(pathName);
@@ -162,7 +161,6 @@ const AuctionForm = ({ auction }: Props) => {
               name="auctionEnd"
               control={control}
               rules={{ required: "Date is required" }}
-              showTimeSelect
             />
           </div>
         )}

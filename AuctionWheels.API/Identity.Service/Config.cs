@@ -18,7 +18,7 @@ namespace Service.Identity
 
             };
 
-        public static IEnumerable<Client> Clients =>
+        public static IEnumerable<Client> Clients(IConfiguration config) =>
             new Client[]
             {
                 new Client
@@ -38,7 +38,7 @@ namespace Service.Identity
                     ClientSecrets = { new Secret("secret".Sha256())},
                     AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
                     RequirePkce = false,
-                    RedirectUris = { "http://localhost:3000/api/auth/callback/id-server" },
+                    RedirectUris = { config["ClientApp"]+"/api/auth/callback/id-server" },
                     AllowOfflineAccess = true,
                     AllowedScopes = { "openid", "profile", "auctionWheels" },
                     AccessTokenLifetime = 3600*24*30,

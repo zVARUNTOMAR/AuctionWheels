@@ -4,24 +4,24 @@ EXPOSE 80
 
 # Copy all .csproj files and restore as distinct layers. Use of a same COPY Commadn 
 
-COPY AuctionWheels.API.sln AuctionWheels.API.sln
+COPY AuctionWheels.API/AuctionWheels.API.sln AuctionWheels.API/AuctionWheels.API.sln
 
-COPY Auction.Service/Auction.Service.csproj Auction.Service/Auction.Service.csproj
-COPY Search.Service/Search.Service.csproj Search.Service/Search.Service.csproj
-COPY Gateway.Service/Gateway.Service.csproj Gateway.Service/Gateway.Service.csproj
-COPY Bidding.Service/Bidding.Service.csproj Bidding.Service/Bidding.Service.csproj
-COPY Identity.Service/Identity.Service.csproj Identity.Service/Identity.Service.csproj
-COPY Contracts/Contracts.csproj Contracts/Contracts.csproj
-COPY Notification.Service/Notification.Service.csproj Notification.Service/Notification.Service.csproj
+COPY AuctionWheels.API/Auction.Service/Auction.Service.csproj AuctionWheels.API/Auction.Service/Auction.Service.csproj
+COPY AuctionWheels.API/Search.Service/Search.Service.csproj AuctionWheels.API/Search.Service/Search.Service.csproj
+COPY AuctionWheels.API/Gateway.Service/Gateway.Service.csproj AuctionWheels.API/Gateway.Service/Gateway.Service.csproj
+COPY AuctionWheels.API/Bidding.Service/Bidding.Service.csproj AuctionWheels.API/Bidding.Service/Bidding.Service.csproj
+COPY AuctionWheels.API/Identity.Service/Identity.Service.csproj AuctionWheels.API/Identity.Service/Identity.Service.csproj
+COPY AuctionWheels.API/Contracts/Contracts.csproj AuctionWheels.API/Contracts/Contracts.csproj
+COPY AuctionWheels.API/Notification.Service/Notification.Service.csproj AuctionWheels.API/Notification.Service/Notification.Service.csproj
 
-RUN dotnet restore AuctionWheels.API.sln
+RUN dotnet restore AuctionWheels.API/AuctionWheels.API.sln
 
 # Copy everything else and build
 
-COPY Identity.Service Identity.Service
-COPY Contracts Contracts
+COPY AuctionWheels.API/Identity.Service AuctionWheels.API/Identity.Service
+COPY AuctionWheels.API/Contracts AuctionWheels.API/Contracts
 
-WORKDIR /app/Identity.Service
+WORKDIR /app/AuctionWheels.API/Identity.Service
 
 RUN dotnet publish -c Release -o /app/out
 

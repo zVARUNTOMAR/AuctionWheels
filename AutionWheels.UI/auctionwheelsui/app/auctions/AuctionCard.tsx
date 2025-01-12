@@ -20,7 +20,7 @@ const AuctionCard = ({ auction }: Props) => {
         <div className="absolute bottom-2 right-2">
           <CurrentBid
             reservePrice={auction.reservePrice}
-            amount={auction.currentHighBid}
+            amount={auction.currentHighBid ?? 0}
           ></CurrentBid>
         </div>
       </div>

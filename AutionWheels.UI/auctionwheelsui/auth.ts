@@ -11,12 +11,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       id: "id-server",
       clientId: "nextApp",
       clientSecret: "secret",
-      issuer: "http://localhost:5000",
-      authorization: { params: { scope: "openid profile auctionWheels" } },
+      issuer: process.env.ID_URL,
+      authorization: {
+        params: { scope: "openid profile auctionWheels" },
+        url: process.env.ID_URL + "/connect/authorize",
+      },
+      token: {
+        url: `${process.env.ID_URL_INTERNAL}/connect/token`,
+      },
+      userinfo: {
+        url: `${process.env.ID_URL_INTERNAL}/connect/token`,
+      },
       idToken: true,
     } as OIDCConfig<Omit<Profile, "usernme">>),
   ],
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      return url.startsWith(baseUrl) ? url : baseUrl;
+    },
+
     async jwt({ token, profile, account }) {
       if (account && account.access_token) {
         token.access_token = account.access_token;
@@ -29,11 +42,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
 
     async session({ session, token }) {
+      const sessionObj = session as any;
       if (token) {
-        session.user.username = token.username;
-        session.accessToken = token.access_token;
+        sessionObj.user.username = token.username;
+        sessionObj.accessToken = token.access_token;
       }
-      return session;
+      return sessionObj;
     },
 
     async authorized({ auth }) {

@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/auth";
-import { NextApiRequest } from "next";
 import { getToken } from "next-auth/jwt";
 import { cookies, headers } from "next/headers";
 
@@ -14,20 +13,18 @@ export async function getCurrentUser() {
     }
 
     return session.user;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
 
 export async function getTokenWorkaround() {
   const req = {
-    headers: Object.fromEntries(headers() as Headers),
+    headers: Object.fromEntries((await headers()) as Headers),
     cookies: Object.fromEntries(
-      cookies()
-        .getAll()
-        .map((c) => [c.name, c.value])
+      (await cookies()).getAll().map((c: any) => [c.name, c.value])
     ),
-  } as NextApiRequest;
+  };
 
-  return await getToken({ req });
+  return await getToken({ req: req as any });
 }
